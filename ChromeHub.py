@@ -1,6 +1,7 @@
 # Modules for starting chrome
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+import webbrowser
 # GUI
 import tkinter as tk
 from tkinter import ttk
@@ -33,14 +34,20 @@ def ip():
     
 def add_tab():
     try:
-        save_tab = open("ChromeHubStartupTabs.txt", "w")
-        save_tab.write(open_start_tabs_entry.get() + " ")
         start_tabs.append(open_start_tabs_entry.get())
-        save_tab.close()
         start_tab_list_label.config(text="Tabs: " + str(start_tabs))
-        os.system("ChromeHubStartupTabs.txt")
     except:
         tkinter.messagebox.showerror("Error", "An error occurred while saving and opening the file or the entry is not filled in properly.")
+        
+        
+def open_in_chrome():
+    if len(start_tabs) > 0:
+        for i in start_tabs:
+            webbrowser.open(i)
+    else:
+        tkinter.messagebox.showerror('Error', 'Please add a tab to continue.')
+
+                
 
 open_website_head = tk.Label(root, text="Open Website")
 open_website_head.grid(row=0, column=0)
@@ -54,7 +61,7 @@ ip_input = tk.Entry(root, width=30)
 ip_input.grid(row=3, column=0)
 ip_connect = tk.Button(root, text="Connect", command=lambda: [ip()])
 ip_connect.grid(row=3, column=1)
-sec2_lab = tk.Label(root, text="Open Tabs on Startup")
+sec2_lab = tk.Label(root, text="Open Tabs in Chrome")
 sec2_lab.grid(row=4, column=0)
 sep = ttk.Separator(root, orient='horizontal')
 sep.grid(row=5, column=0, sticky='ew')
@@ -63,5 +70,7 @@ open_start_tabs_entry.grid(row=6, column=0)
 add_start_tab = tk.Button(root, text='Add Tab', command=lambda: [add_tab()])
 add_start_tab.grid(row=6, column=1)
 start_tab_list_label = tk.Label(root, text="Tabs: " + str(start_tabs))
-start_tab_list_label.grid(row=6, column=2)
+start_tab_list_label.grid(row=7, column=0)
+open_startup_btn = tk.Button(root, text='Open tabs in Chrome', command=lambda: [open_in_chrome()])
+open_startup_btn.grid(row=8, column=0)
 root.mainloop()
